@@ -28,5 +28,3 @@ def edit_user_data(user) -> bool:
                 return False
             if data == user:
                 break
-        
-    with open(File)
