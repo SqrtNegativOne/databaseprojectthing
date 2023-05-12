@@ -10,7 +10,7 @@
 ### Teacher data
 - Name
 - Teacher number
-- Subject
+- Subject  
 we can add more data fields, but these are the bare essentials, and ehhhh let's just keep it that way
 ### Student data
 - Name
@@ -18,9 +18,9 @@ we can add more data fields, but these are the bare essentials, and ehhhh let's 
 - Subjects
 ### Homework data
 - Subject
-- Deadline
-I guess teachers will have their own application thingie to login with, and students their own.
+- Deadline  
 ## Functions
+we can have two different login terminals for the student and teh teacher
 ### Teacher functions
 - Assign homework
 - Check student's homework
