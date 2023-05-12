@@ -19,6 +19,15 @@ we can add more data fields, but these are the bare essentials, and ehhhh let's 
 ### Homework data
 - Subject
 - Deadline  
+### Subjects
+must be spelled *exactly* as mentioned below, with the caps and all
+- Physics
+- Chemistry
+- Mathematics
+- Computer Science
+- Physical Education
+- Biology  
+ehhhh let's just keep the list at that
 ## Functions
 we can have two different login terminals for the student and teh teacher
 ### Teacher functions
