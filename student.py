@@ -7,6 +7,9 @@ databaseprojectthing = """
                                                                                                                                                                           
 """
 print(databaseprojectthing)
+
+subjects = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'Computer Science' 'Physical Education']
+
 print('Welcome to the student login page.')
 with open('students.csv', 'r+') as databasething:
     studentList = list(csv.reader(databasething))
