@@ -1,23 +1,28 @@
 from collections import namedtuple
+import hashlib
 import pickle
 
 FILE_PATH = "teacher_data.txt"
 HW_FILE_PATH = "homework.txt"
 
-teacher = namedtuple("teacher", ["name", "adm_no", "subject", "password"])
+teacher = namedtuple("teacher", ["name", "emp_no", "subject", "password"])
 
 def signup(user):
+   
+    emp_no = hashlib.sha1(user["name"].encode("UTF-8")).hexdigest()[:5]
+    user = user._replace(emp_no=emp_no)
+
     with open(FILE_PATH, "ab") as f:
         pickle.dump(user, f)
 
-def signin(password) -> bool:
+def signin(emp_no, password) -> bool:
     with open(FILE_PATH, "rb") as f:
         while True:
             try:
                 user = pickle.load(f)
             except EOFError:
                 return False
-            if user["password"] == password:
+            if user["password"] == password and user["emp_no"] == user["emp_no"]:
                 return user
 
 def edit_user_data(user, attrs) -> bool:
@@ -45,28 +50,28 @@ def assign_hw(user, hw_data) -> None:
         f.write(user.subject.upper().ljust(10) + hw_data)
    
 
-signup(teacher("karan", 7439, "phy", "cat"))
-signup(teacher("acide", 7436, "chm", "dog"))
-signup(teacher("topper", 1000, "PE", "PCC"))
+# signup(teacher("karan", 7439, "phy", "cat"))
+# signup(teacher("acide", 7436, "chm", "dog"))
+# signup(teacher("topper", 1000, "PE", "PCC"))
 
-with open(FILE_PATH, "r+b") as f:
-    while True:
-        try:
-            print(pickle.load(f))
-        except EOFError:
-            break
+# with open(FILE_PATH, "r+b") as f:
+#     while True:
+#         try:
+#             print(pickle.load(f))
+#         except EOFError:
+#             break
 
-edit_user_data(teacher("karan", 7439, "phy", "cat"), {"name":"koooo"})
-print("-"*10)
+# edit_user_data(teacher("karan", 7439, "phy", "cat"), {"name":"koooo"})
+# print("-"*10)
 
-with open(FILE_PATH, "r+b") as f:
-    while True:
-        try:
-            print(pickle.load(f))
-        except EOFError:
-            break
+# with open(FILE_PATH, "r+b") as f:
+#     while True:
+#         try:
+#             print(pickle.load(f))
+#         except EOFError:
+#             break
 
-assign_hw(teacher("koooo", 7439, "phy", "cat"), "DO UR WORK NOWWWW!!!!!!!!!!!!!!!!!")
+# assign_hw(teacher("koooo", 7439, "phy", "cat"), "DO UR WORK NOWWWW!")
 
-with open(HW_FILE_PATH, "r") as f:
-    print(f.read())
+# with open(HW_FILE_PATH, "r") as f:
+#     print(f.read())
