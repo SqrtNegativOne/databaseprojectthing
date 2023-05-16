@@ -1,4 +1,4 @@
-Name,Adm. No.,Subjects
-Ark Malhotra,7519,"Physics, Chemistry, Mathematics, Computer Science"
-Nonexistant person,0000,"Chemistry, Biology"
-Karan Gupta,8789,"Physics, Chemistry, Mathematics, Computer Science"
+Name,Password,Adm.No.,Subjects
+Ark Malhotra,123456,1,"Physics, Chemistry, Mathematics, Computer Science"
+Nonexistant person,0000,2,"Chemistry, Biology"
+Karan Gupta,karanisgreat,3,"Physics, Chemistry, Mathematics, Computer Science"
