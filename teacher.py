@@ -2,6 +2,7 @@ from collections import namedtuple
 import pickle
 
 FILE_PATH = "teacher_data.txt"
+HW_FILE_PATH = "homework.txt"
 
 teacher = namedtuple("teacher", ["name", "adm_no", "subject", "password"])
 
@@ -29,7 +30,7 @@ def edit_user_data(user, attrs) -> bool:
                 data.append(pickle.load(f))
             except EOFError:
                 break
-    
+   
     with open(FILE_PATH, "wb") as f:
         for i in data:
             if i == user:
@@ -37,21 +38,35 @@ def edit_user_data(user, attrs) -> bool:
             else:
                 pickle.dump(i, f)
 
-# signup(teacher("karan", 7439, "phy", "cat"))
-# signup(teacher("acide", 7436, "chm", "dog"))
+def assign_hw(user, hw_data) -> None:
 
-# with open(FILE_PATH, "r+b") as f:
-#     while True:
-#         try:
-#             print(pickle.load(f))
-#         except EOFError:
-#             break
+    with open(HW_FILE_PATH, "a") as f:
+       
+        f.write(user.subject.upper().ljust(10) + hw_data)
+   
 
-# edit_user_data(teacher("karan", 7439, "phy", "cat"), {"name":"koooo"})
+signup(teacher("karan", 7439, "phy", "cat"))
+signup(teacher("acide", 7436, "chm", "dog"))
+signup(teacher("topper", 1000, "PE", "PCC"))
 
-# with open(FILE_PATH, "r+b") as f:
-#     while True:
-#         try:
-#             print(pickle.load(f))
-#         except EOFError:
-#             break
+with open(FILE_PATH, "r+b") as f:
+    while True:
+        try:
+            print(pickle.load(f))
+        except EOFError:
+            break
+
+edit_user_data(teacher("karan", 7439, "phy", "cat"), {"name":"koooo"})
+print("-"*10)
+
+with open(FILE_PATH, "r+b") as f:
+    while True:
+        try:
+            print(pickle.load(f))
+        except EOFError:
+            break
+
+assign_hw(teacher("koooo", 7439, "phy", "cat"), "DO UR WORK NOWWWW!!!!!!!!!!!!!!!!!")
+
+with open(HW_FILE_PATH, "r") as f:
+    print(f.read())
