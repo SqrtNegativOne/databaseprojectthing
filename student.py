@@ -21,14 +21,14 @@ def refreshDatabase():
     global studentList
     with open(STUDENT_FILE_PATH, 'r+') as databasething:
         studentList = list(csv.reader(databasething))
-        print(studentList)
+        print(studentList) # DEBUG
 
 def getUser(admo):
     global studentList
     for row in studentList:
         if row[2] == admo:
             user = row
-    print(row)
+    print(row) # DEBUG
     return row
 
 def signin():
@@ -39,7 +39,7 @@ def signin():
     else:
         user = getUser(admno)
         password = sha256(input('Password: ').encode('utf-8')).hexdigest() # Password for Ark Malhotra = 123456
-        print(password)
+        print(password) # DEBUG
         if password != user[1]:
             print('Error: wrong password.')
             return None
@@ -84,7 +84,6 @@ while not user:
     elif command == 'exit':
         exit = True
         break
-        
 
 if not exit: print('You are now logged in.')
 
