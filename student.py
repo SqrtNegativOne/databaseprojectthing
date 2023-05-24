@@ -1,5 +1,5 @@
 import csv
-import time
+from hashlib import sha256
 
 databaseprojectthing = """
 █▀▄░█▀█░▀█▀░█▀█░█▀▄░█▀█░█▀▀░█▀▀░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░▀█▀░▀█▀░█░█░▀█▀░█▀█░█▀▀
@@ -14,57 +14,84 @@ subjects = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'Computer Science'
 STUDENT_FILE_PATH = 'students.csv'
 HW_FILE_PATH = 'homework.txt'
 
+studentList = []
 
 print('Welcome to the student login page.')
-with open(STUDENT_FILE_PATH, 'r+') as databasething:
-    studentList = list(csv.reader(databasething))
-    print(studentList)
+def refreshDatabase():
+    global studentList
+    with open(STUDENT_FILE_PATH, 'r+') as databasething:
+        studentList = list(csv.reader(databasething))
+        print(studentList)
+
+def getUser(admo):
+    global studentList
+    for row in studentList:
+        if row[2] == admo:
+            user = row
+    print(row)
+    return row
+
+def signin():
+    admno = input('Enter your admission number: ')
+    if admno not in [row[2] for row in studentList]:
+        print('Error: Admission number not found.')
+        return None
+    else:
+        user = getUser(admno)
+        password = sha256(input('Password: ').encode('utf-8')).hexdigest() # Password for Ark Malhotra = 123456
+        print(password)
+        if password != user[1]:
+            print('Error: wrong password.')
+            return None
+        else:
+            return user
 
 def register():
     global studentList
     with open(STUDENT_FILE_PATH, 'a', newline='') as databasething:
         writerObject = csv.writer(databasething)
-        writerObject.writerow([input('Name: '), hash(input('Password: ')), len(studentList), input('Subjects, separated by a comma (no space in between!): ')])
-        print('⇒', len(studentList), 'is your admission number. Use this to login next time.')
-        time.sleep(5)
+        writerObject.writerow([input('Name: '), sha256(input('Password: ').encode('utf-8')).hexdigest(), len(studentList), input('Subjects, separated by a comma (no space in between!): ')])
+        admo = len(studentList)
+        print('⇒', admo, 'is your admission number. Use this to login next time.')
+        input('Press any key to continue.')
+        refreshDatabase()
+        return getUser(admo)
 
+def seeHomework():
+    with open(HW_FILE_PATH, 'r') as hw:
+        print(hw.readlines())
+        homeworkList = [item for item in hw.readlines()]
+        print(homeworkList)
+        # Homework Subject Deadline
+    for homework in homeworkList:
+        if homework[1] in user[3].split(','):
+            print(str(homework[1]) + ': '+ str(homework[0]) + '(Deadline: ' + str(homework[3]) + ')')
 
-def logined(user):
-    global studentList
-    print('You are now logged in.')
-    print('homework: Checks all homework assigned to you.\ndelete subject: delete a subject\nadd subject: add a subject.')
-    answer = input('>>>')
-    if answer == 'homework':
-        with open(HW_FILE_PATH, 'r') as hw:
-            print(hw.readlines())
-            # THIS CODE IS NOT COMPLETE. can only be completed afte talkng to karan about how to manage the text file
-            homeworkList = [item for item in hw.readlines()]
-            print(homeworkList)
-            # Homework Subject Deadline
-        for homework in homeworkList:
-            if homework[1] in user[3].split(','):
-                print(str(homework[1]) + ': '+ str(homework[0]) + '(Deadline: ' + str(homework[3]) + ')')
-    elif answer == 'delete subject':
-        while True:
-            ...
-            # WORK FROM HERE
-    else:
-        print('What?')
+def deleteSubject():
+    ...
 
+def addSubject():
+    ...
 
+refreshDatabase()
+user = None
+while not user:
+    command = input('Type "signin" to sign in, "register" to register, and "exit" to exit.')
+    if command == 'signin':
+        user = signin()
+    elif command == 'register':
+        user = register()
+    elif command == 'exit':
+        exit = True
+        break
+        
 
-admno = input('Enter your admission number: ') # I would have used a walrus operator, but the computer lab only has python 3.7, not the required python 3.8 :harold:
-if admno not in [row[2] for row in studentList]:
-    if input('Error: Admission number not found in student database; would you register instead? (y/n)') == 'y': register()
-else:
-    for row in studentList:
-        if row[2] == admno:
-            user = row
-    print(user)
-    password = hash(input('Password: ')) # Password for Ark Malhotra = 123456
-    print(password)
-    if password != int(user[1]):
-        print('Error: wrong password.')
-    else:
-        print('karan is  the best')
-        logined(user)
+if not exit: print('You are now logged in.')
+
+while not exit:
+    print('homework: See all the homework assigned to you.\ndelete-subject: delete a subject\nadd-subject: add a subject.\nexit: Stops the program.')
+    command = input('>>>')
+    if command == 'homework': seeHomework()
+    elif command == 'delete-subject': deleteSubject()
+    elif command == 'add-subject': addSubject()
+    elif command == 'exit': break
