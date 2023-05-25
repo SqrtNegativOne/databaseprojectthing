@@ -56,11 +56,13 @@ def register():
     global studentList
     with open(STUDENT_FILE_PATH, 'a', newline='') as databasething:
         subjectText = 'Subjects, separated by a comma (no space in between!):'
+        #create new variables for Name, Password, to make it a user list as well as write it into the .csv file
         csv.writer(databasething).writerow([input('Name: '), sha256(input('Password: ').encode('utf-8')).hexdigest(), len(studentList), input(subjectText)])
         admo = len(studentList)
         print('⇒', admo, 'is your admission number. Use this to login next time.\n')
-        refreshDatabase()
-        return getUser(admo)
+        #refreshDatabase() # OK SO instead of fixing that bug, just append all the details of the new user onto the studentList; it will be faster as well
+        user = 
+        return user
 
 def seeHomework(user):
     with open(HW_FILE_PATH, 'r') as hw:
