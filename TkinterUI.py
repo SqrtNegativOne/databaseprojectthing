@@ -30,27 +30,19 @@ class App(tk.Tk):
         self.rgt_frm.pack(side="right", fill="y")
         self.mid_frm.pack(anchor="center", fill="both", expand=1)
 
-        # tk.Button(dwn_frm, height=5, width=5).pack(anchor="center")
-        # tk.Button(lft_frm, height=5, width=5).pack(anchor="center")
-        # tk.Button(rgt_frm, height=5, width=5).pack(anchor="center")
-
         title_label = tk.Label(self.top_frm, text=databaseprojectthing, font="helvatica 15 bold")
         title_label.pack(anchor="center", pady=10)
 
         self.title_screen()
 
-
-    def widget_clearer(self, func):
-        def in_func():
-            for i in self.current_widgets:
+    def widget_clearer(func):
+        def in_func(*args):
+            for i in args[0].current_widgets:
                 i.destroy()
+            widgets = func(*args)
+            args[0].current_widgets = widgets
 
-            widgets = func()
-
-            self.current_widgets.clear
-            self.current_widgets += widgets
-
-        return in_func()
+        return in_func
 
     @widget_clearer
     def signin(self, username, password, typ):
@@ -59,8 +51,6 @@ class App(tk.Tk):
             ...
         else:
             ...
-
-        self.refresh_widgets()
 
     @widget_clearer
     def signup(self):
@@ -92,7 +82,7 @@ class App(tk.Tk):
         ok_btn.grid(row=3, column=0)
         su_btn.grid(row=3, column=1)
 
-        return box_frm
+        return [box_frm]
 
 
 if __name__ == "__main__":
