@@ -54,10 +54,13 @@ class App(tk.Tk):
 
     @widget_clearer
     def signup(self):
-        ...
+        box_frm = tk.Frame(self.mid_frm)
+        box_frm.pack(anchor="center")
+        
+        lbl1 = tk.Label(text="...")
 
     @widget_clearer
-    def title_screen(self) -> None:
+    def title_screen(self) -> list:
         box_frm = tk.Frame(self.mid_frm)
         box_frm.pack(anchor="center")
 
