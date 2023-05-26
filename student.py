@@ -7,99 +7,120 @@ databaseprojectthing = """
 ▀▀░░▀░▀░░▀░░▀░▀░▀▀░░▀░▀░▀▀▀░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░▀▀▀
                                                                                                                                                                           
 """
-print(databaseprojectthing)
 
-subjects = ['Physics', 'Chemistry', 'Mathematics', 'Biology', 'Computer Science', 'Physical Education']
-
-STUDENT_FILE_PATH = 'students.csv'
-HW_FILE_PATH = 'homework.txt'
-
-studentList = []
-
-print('Welcome to the student login page.\n')
-
-def refreshDatabase():
+def fetchDatabase():
     global studentList
-    studentList = []
-    with open(STUDENT_FILE_PATH, 'r') as databasething:
-        databasething.seek(0)
-        for row in csv.reader(databasething):
-            studentList.append(row)
-        print(studentList) # DEBUGPRINTSTATEMENT
-        # BUG!! Doesn't read the last lines of the csv file?
+    with open(STUDENT_FILE_PATH, 'r+') as databasething:
+        studentList = list(csv.reader(databasething))
+
+def rewriteDatabase():
+    global studentList
+    ...
 
 def getUser(admo):
-    global studentList
-    user = []
+    global studentList, user
     for row in studentList:
         if row[2] == admo:
             user = row
-    print(user) # DEBUGPRINTSTATEMENT
     return user
 
-def signin():
-    admno = input('Enter your admission number: ')
+def login(admno, password):
     if admno not in [row[2] for row in studentList]:
-        print('Error: Admission number not found.')
-        return None
+        return
     else:
-        user = getUser(admno)
-        password = sha256(input('Password: ').encode('utf-8')).hexdigest() # Password for Ark Malhotra = 123456
-        print(password) # DEBUGPRINTSTATEMENT
-        if password != user[1]:
-            print('Error: wrong password.')
-            return None
+        user = getUser(admno) # Password for Ark Malhotra = 123456
+        if sha256(password.encode('utf-8')).hexdigest() != user[1]:
+            return
         else:
             return user
 
-def register():
-    global studentList
+def register(name, password, subjectlist):
+    global studentList, user
     with open(STUDENT_FILE_PATH, 'a', newline='') as databasething:
-        subjectText = 'Subjects, separated by a comma (no space in between!):'
-        #create new variables for Name, Password, to make it a user list as well as write it into the .csv file
-        csv.writer(databasething).writerow([input('Name: '), sha256(input('Password: ').encode('utf-8')).hexdigest(), len(studentList), input(subjectText)])
-        admo = len(studentList)
-        print('⇒', admo, 'is your admission number. Use this to login next time.\n')
-        #refreshDatabase() # OK SO instead of fixing that bug, just append all the details of the new user onto the studentList; it will be faster as well
-        user = 
+        user = [name, sha256(password.encode('utf-8')).hexdigest(), len(studentList), subjectlist]
+        csv.writer(databasething).writerow(user)
         return user
 
-def seeHomework(user):
+def seeHomework():
+    global user
     with open(HW_FILE_PATH, 'r') as hw:
-        print(hw.readlines())
-        homeworkList = [item for item in hw.readlines()]
-        print(homeworkList)
+        homeworkList = [item[0:-1].split('\t\t') for item in hw.readlines()]
         # Homework Subject Deadline
+    print('\n')
     for homework in homeworkList:
         if homework[1] in user[3].split(','):
-            print(str(homework[1]) + ': '+ str(homework[0]) + '(Deadline: ' + str(homework[3]) + ')')
+            print('→ ' + str(homework[1]) + ': '+ str(homework[0]) + '\n(Deadline: ' + str(homework[2]) + ')')
 
-def deleteSubject(user):
+def deleteSubjects(deletedSubjects):
+    global user, studentList
+    for randomUserN in range(len(studentList)):
+        if user[2] == studentList[randomUserN]:
+            subjectlist = studentList[randomUserN].split(',')
+            for subject in subjectlist:
+                if subject in deletedSubjects:
+                    subjectlist.remove(subject)
+            studentList[randomUserN] = subjectlist
+    # WORK FROM HERE
+
+
+def addSubject():
+    global user
     ...
 
-def addSubject(user):
-    ...
+print(databaseprojectthing)
 
-refreshDatabase()
+STUDENT_FILE_PATH = 'students.csv'
+HW_FILE_PATH = 'homework.txt'
+subjectlist = ['Physics','Chemistry','Mathematics', 'Computer Science', 'Physical Education', 'Biology']
+
+studentList = []
+fetchDatabase()
+
+
+print('Welcome to the student login page.')
+
 user = None
-exit = False
 while not user:
-    print('Type "signin" to sign in, "register" to register, and "exit" to exit.')
+    print('Type "login" to login, "register" to register, and "exit" to exit.')
     command = input('>>> ')
-    if command == 'signin':
-        user = signin()
+    if command == 'login':
+        admno = input('\nEnter your admission number: ')
+        password = input('Enter your password: ')
+        user = login(admno, password)
+    elif command == '.': user = login('1', '123456')
+
     elif command == 'register':
-        user = register()
+        name = input('\nEnter your name: ')
+        password = input('Enter your password: ')
+        print('Here is a list of all courses offered:' *subjectlist)
+        subjects = input('Enter all subjects *separated by a "," (not space!):')
+        user = register(name, password, subjects)
+        print('\n⇒', len(studentList), 'is your admission number. Use this to login next time.')
+
     elif command == 'exit':
-        exit = True
-        break
+        exit()
+    
+    if not user: print('Error: username or password was wrong.')
+        
 
-if not exit: print('You are now logged in.\nHere\'s a list of all the commands:\n\n')
-
-while not exit:
-    print('homework: See all the homework assigned to you.\ndelete-subject: delete a subject\nadd-subject: add a subject.\nexit: Stops the program.')
+print(f'\n\nWelcome, {user[0]}. You are now logged in.\nHere is a list of all the commands:\n')
+while True:
+    print('⋅ homework: See all the homework assigned to you.\n⋅ delete-subject: delete a subject\n⋅ add-subject: add a subject.\n⋅ exit: Stops the program.')
     command = input('>>> ')
-    if command == 'homework': seeHomework(user)
-    elif command == 'delete-subject': deleteSubject(user)
-    elif command == 'add-subject': addSubject(user)
-    elif command == 'exit': break
+    if command == 'homework' or 'hw': seeHomework()
+    elif command == 'delete-subject' or 'ds':
+        print('Here are the subjects you have taken: ' )
+        for subject in user[3].split(','):
+            print('⋅', subject)
+        error = 0
+        while True:
+            error = 0
+            deletedSubjects = input('Please enter all the subjects you want to drop, separated by ",": ')
+            for subject in deletedSubjects.split(','):
+                if subject not in user[3].split(','):
+                    error = 1
+                    print('Error: you entered a subject which you do not have.')
+            if error == 0: break
+        deleteSubjects(deletedSubjects)
+    elif command == 'add-subject' or 'as': addSubject()
+    elif command == 'exit' or 'e': exit()
