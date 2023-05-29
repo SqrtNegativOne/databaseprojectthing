@@ -1,12 +1,17 @@
 import csv
 from hashlib import sha256
+from random import randint
 
-databaseprojectthing = """
+databaseprojectthing ="""
 █▀▄░█▀█░▀█▀░█▀█░█▀▄░█▀█░█▀▀░█▀▀░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░▀█▀░▀█▀░█░█░▀█▀░█▀█░█▀▀
 █░█░█▀█░░█░░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░█▀▄░█░█░░░█░█▀▀░█░░░░█░░░█░░█▀█░░█░░█░█░█░█
-▀▀░░▀░▀░░▀░░▀░▀░▀▀░░▀░▀░▀▀▀░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░▀▀▀
-                                                                                                                                                                          
-"""
+▀▀░░▀░▀░░▀░░▀░▀░▀▀░░▀░▀░▀▀▀░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░▀▀▀"""
+
+STUDENT_FILE_PATH = 'students.csv'
+HW_FILE_PATH = 'homework.txt'
+subjectlist = ['Physics','Chemistry','Mathematics', 'Computer Science', 'Physical Education', 'Biology']
+studentList = []
+
 
 def fetchDatabase():
     global studentList
@@ -15,7 +20,8 @@ def fetchDatabase():
 
 def rewriteDatabase():
     global studentList
-    ...
+    with open(STUDENT_FILE_PATH, 'w+') as databasething:
+        ...
 
 def getUser(admo):
     global studentList, user
@@ -66,61 +72,59 @@ def deleteSubjects(deletedSubjects):
 def addSubject():
     global user
     ...
-
-print(databaseprojectthing)
-
-STUDENT_FILE_PATH = 'students.csv'
-HW_FILE_PATH = 'homework.txt'
-subjectlist = ['Physics','Chemistry','Mathematics', 'Computer Science', 'Physical Education', 'Biology']
-
-studentList = []
-fetchDatabase()
-
-
-print('Welcome to the student login page.')
-
-user = None
-while not user:
-    print('Type "login" to login, "register" to register, and "exit" to exit.')
-    command = input('>>> ')
-    if command == 'login':
-        admno = input('\nEnter your admission number: ')
-        password = input('Enter your password: ')
-        user = login(admno, password)
-    elif command == '.': user = login('1', '123456')
-
-    elif command == 'register':
-        name = input('\nEnter your name: ')
-        password = input('Enter your password: ')
-        print('Here is a list of all courses offered:' *subjectlist)
-        subjects = input('Enter all subjects *separated by a "," (not space!):')
-        user = register(name, password, subjects)
-        print('\n⇒', len(studentList), 'is your admission number. Use this to login next time.')
-
-    elif command == 'exit':
-        exit()
     
-    if not user: print('Error: username or password was wrong.')
-        
+def deleteAccount():
+    ...
 
-print(f'\n\nWelcome, {user[0]}. You are now logged in.\nHere is a list of all the commands:\n')
-while True:
-    print('⋅ homework: See all the homework assigned to you.\n⋅ delete-subject: delete a subject\n⋅ add-subject: add a subject.\n⋅ exit: Stops the program.')
-    command = input('>>> ')
-    if command == 'homework' or 'hw': seeHomework()
-    elif command == 'delete-subject' or 'ds':
-        print('Here are the subjects you have taken: ' )
-        for subject in user[3].split(','):
-            print('⋅', subject)
-        error = 0
-        while True:
+if __name__ == '__main__':
+    print(databaseprojectthing)
+    fetchDatabase()
+    
+    
+    print('Welcome to the student login page.')
+    
+    user = None
+    while not user:
+        print('Type "login" to login, "register" to register, and "exit" to exit.')
+        command = input('>>> ')
+        if command == 'login':
+            admno = input('\nEnter your admission number: ')
+            password = input('Enter your password: ')
+            user = login(admno, password)
+        elif command == '.': user = login('1', '123456')
+    
+        elif command == 'register':
+            name = input('\nEnter your name: ')
+            password = input('Enter your password: ')
+            print('Here is a list of all courses offered:', *subjectlist)
+            subjects = input('Enter all subjects *separated by a "," (not space!):')
+            user = register(name, password, subjects)
+            print('\n⇒', len(studentList), 'is your admission number. Use this to login next time.')
+    
+        elif command == 'exit':
+            exit()
+        
+        if not user: print('Error: username or password was wrong.')
+            
+    
+    print(f'\n\nWelcome, {user[0]}. You are now logged in.\nHere is a list of all the commands:')
+    while True:
+        print('\n⋅ homework: See all the homework assigned to you.\n⋅ delete-subject: delete a subject\n⋅ add-subject: add a subject.\n⋅ exit: Stops the program.')
+        command = input('>>> ')
+        if command == 'homework' or command == 'hw': seeHomework()
+        elif command == 'delete-subject' or command == 'ds':
+            print('Here are the subjects you have taken: ' )
+            for subject in user[3].split(','):
+                print('⋅', subject)
             error = 0
-            deletedSubjects = input('Please enter all the subjects you want to drop, separated by ",": ')
-            for subject in deletedSubjects.split(','):
-                if subject not in user[3].split(','):
-                    error = 1
-                    print('Error: you entered a subject which you do not have.')
-            if error == 0: break
-        deleteSubjects(deletedSubjects)
-    elif command == 'add-subject' or 'as': addSubject()
-    elif command == 'exit' or 'e': exit()
+            while True:
+                error = 0
+                deletedSubjects = input('Please enter all the subjects you want to drop, separated by ",": ')
+                for subject in deletedSubjects.split(','):
+                    if subject not in user[3].split(','):
+                        error = 1
+                        print('Error: you entered a subject which you do not have.')
+                if error == 0: break
+            deleteSubjects(deletedSubjects)
+        elif command == 'add-subject' or command == 'as': addSubject()
+        elif command == 'exit' or command == 'e': exit()
