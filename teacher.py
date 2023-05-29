@@ -2,7 +2,6 @@ from collections import namedtuple
 from difflib import SequenceMatcher
 from hashlib import sha256
 import pickle
-import os
 
 databaseprojectthing = """
 ░█▀▄░█▀█░▀█▀░█▀█░█▀▄░█▀█░█▀▀░█▀▀░░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░▀█▀░░▀█▀░█░█░▀█▀░█▀█░█▀▀
@@ -89,62 +88,4 @@ def search_users(keyword, name_search: bool) -> list:
     
     users.sort(key=lambda x: x[1], reverse=True)[5:]
     return [user[0] for user in users if users[1] > 0.6]
-
-
-def print_banner(subtext=None) -> None:
-    os.system("cls")
-    print(databaseprojectthing)
-    if subtext:
-        print(subtext)
-    print()
-
-if __name__ == "__main__":
-    user = None
-    subtext = "Welcome!"
-
-    while not user:
-        print_banner(subtext)
-        login_state = input("Signin/Signup/Exit: ").casefold()
-
-        if login_state == "signin":
-            username = input("Employee Number: ")
-            password = input("Password: ")
-            user = signin(username, password)
-
-        elif login_state == "signup":
-            name     = input("Name: ")
-            subject  = input("Subject: ")
-            password = input("Password: ")
-            user = signup(teacher(name, None, subject, password))
-        
-        elif login_state == "exit":
-            exit()
-
-        else:
-            input("\n\u26A0 Invalid prompt.\nPress Enter to continue.")
-
-
-    while True:
-        print_banner(f"Signed in as: \t\t{user.name.capitalize()}#{user.emp_no}")
-
-        print("Commands:\n| Edit Personal Data (1)| Assign Homework (2) | Exit (3) |")
-        command = input(">>>").casefold()
-
-        if command == "1": #edit personal data
-            field = input("Field name: ")
-            value = input("New Value: ")
-
-            try: 
-                user = edit_user_data(user, {field: value})
-            except ValueError:
-                input("\n\u26A0 Invalid prompt.\nPress Enter to continue.")
-
-        elif command == "2": #assign homework
-            ...
-        
-        elif command == "3": #exit
-            exit()
-        
-        else:
-            input("\n\u26A0 Invalid prompt.\nPress Enter to continue.")
 
