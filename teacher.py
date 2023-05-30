@@ -17,7 +17,7 @@ teacher = namedtuple("teacher", ["name", "emp_no", "subject", "password"])
 
 def signup(name, subject, password) -> teacher:
 
-    emp_num = 0
+    emp_num = 1
 
     with open(FILE_PATH, "rb") as f:
         while True:
@@ -27,7 +27,7 @@ def signup(name, subject, password) -> teacher:
             except EOFError:
                 break
    
-    emp_num  = "T" + {subject.upper()[0]} + str(emp_num).rjust(4, "0")
+    emp_num  = "T" + subject.upper()[0] + str(emp_num).rjust(4, "0")
     password = sha256(password.encode("UTF-8")).hexdigest()
 
     user = teacher(name, emp_num, subject, password)
@@ -76,16 +76,16 @@ def assign_hw(user, hw_data) -> None:
 
 def search_users(keyword, name_search: bool) -> list:
 
-    users = []    
+    users = []
     with open(FILE_PATH, "rb") as f:
         while True:
             try:
                 user = pickle.load(f)
                 user_criterion = user.name if name_search else user.emp_no
-                users.append((user, SequenceMatcher(None, keyword, user_criterion).ratio()))
+                users.append((user, SequenceMatcher(None, keyword.lower(), user_criterion.lower()).ratio()))
             except EOFError:
                 break
     
-    users.sort(key=lambda x: x[1], reverse=True)[5:]
-    return [user[0] for user in users if users[1] > 0.6]
+    users.sort(key=lambda x: x[1], reverse=True)
+    return [user[0] for user in users[:5] if user[1] > 0.25]
 
