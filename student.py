@@ -1,15 +1,20 @@
 import csv
 from hashlib import sha256
-from random import randint
 
 databaseprojectthing ="""
 █▀▄░█▀█░▀█▀░█▀█░█▀▄░█▀█░█▀▀░█▀▀░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░▀█▀░▀█▀░█░█░▀█▀░█▀█░█▀▀
 █░█░█▀█░░█░░█▀█░█▀▄░█▀█░▀▀█░█▀▀░█▀▀░█▀▄░█░█░░░█░█▀▀░█░░░░█░░░█░░█▀█░░█░░█░█░█░█
 ▀▀░░▀░▀░░▀░░▀░▀░▀▀░░▀░▀░▀▀▀░▀▀▀░▀░░░▀░▀░▀▀▀░▀▀░░▀▀▀░▀▀▀░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░▀▀▀"""
 
+"""
+user = [name, password, admno, Subjects]
+"""
+
 STUDENT_FILE_PATH = 'students.csv'
 HW_FILE_PATH = 'homework.txt'
-subjectlist = ['Physics','Chemistry','Mathematics', 'Computer Science', 'Physical Education', 'Biology']
+SUBJECTS = ["English", "Mathematics", "Chemistry", "Physics",
+            "German", "Computer Science", "Physical Education"]
+
 studentList = []
 
 
@@ -76,6 +81,12 @@ def addSubject():
 def deleteAccount():
     ...
 
+def getUsersWithSubject(subject):
+    with open(STUDENT_FILE_PATH, "r") as f:
+        stlist = list(csv.reader(f))
+    print(stlist)
+    return [i for i in stlist if subject in i[3]]
+
 if __name__ == '__main__':
     print(databaseprojectthing)
     fetchDatabase()
@@ -96,7 +107,7 @@ if __name__ == '__main__':
         elif command == 'register':
             name = input('\nEnter your name: ')
             password = input('Enter your password: ')
-            print('Here is a list of all courses offered:', *subjectlist)
+            print('Here is a list of all courses offered:', *SUBJECTS)
             subjects = input('Enter all subjects *separated by a "," (not space!):')
             user = register(name, password, subjects)
             print('\n⇒', len(studentList), 'is your admission number. Use this to login next time.')
