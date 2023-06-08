@@ -53,14 +53,13 @@ def register(name, password, subjectlist):
         return user
 
 def seeHomework():
-    global user
     with open(HW_FILE_PATH, 'r') as hw:
         homeworkList = [item[0:-1].split('\t\t') for item in hw.readlines()]
-        # Homework Subject Deadline
-    print('\n')
+    validHomeworks = []
     for homework in homeworkList:
         if homework[1] in user[3].split(','):
-            print('→ ' + str(homework[1]) + ': '+ str(homework[0]) + '\n(Deadline: ' + str(homework[2]) + ')')
+            validHomeworks.append(homework)
+    return validHomeworks
 
 def deleteSubjects(deletedSubjects):
     global user, studentList
