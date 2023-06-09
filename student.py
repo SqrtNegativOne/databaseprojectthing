@@ -10,7 +10,7 @@ databaseprojectthing ="""
 
 # user = [name, password, admno, Subjects]
 
-STUDENT_FILE_PATH = r'C:\Users\annu7\Sqrt-1\putting the pro in programming\databaseprojectthing\students.csv'
+STUDENT_FILE_PATH = 'students.csv'
 HW_FILE_PATH = 'homework.txt'
 SUBJECTS = ["English", "Mathematics", "Chemistry", "Physics",
             "German", "Computer Science", "Physical Education"]
