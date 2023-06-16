@@ -414,6 +414,9 @@ class HomeworkFrame(tk.Frame):
     
     def main_screen(self):
 
+        for widget in self.winfo_children():
+            widget.destroy()
+
         scrolly = tk.Scrollbar(self, orient="vertical")
         scrolly.grid(row=0, column=1, sticky="ns")
 
@@ -446,7 +449,6 @@ class HomeworkFrame(tk.Frame):
         self.tree.tag_configure("0", background="#E8E8E8")
         self.tree.tag_configure("1", background="#DFDFDF")
 
-        
         if self.isteacher:
             asn_btn = tk.Button(self, text="Assign Homework", font=FONT4, command=self.assign)
             asn_btn.grid(row=2, column=0, columnspan=2)
@@ -455,8 +457,9 @@ class HomeworkFrame(tk.Frame):
     def assign(self):
 
         def exit_btn():
-            teacher.assign_hw(self.user, ety1.get("1.0", "end"),
+            teacher.assign_hw(self.user, ety1.get("1.0", "end").replace("\n", " "),
                               f"{V_d.get()}/{V_m.get()}/{V_y.get()}")
+            self.main_screen()
             win.destroy()
 
         win = tk.Toplevel(self, takefocus=True, bd=10)
@@ -543,7 +546,9 @@ class App(tk.Tk):
         name, surname = _name[:-1], _name[-1]
         name = " ".join([name[0].upper() for name in name]) + "."
         surname = surname.capitalize()[:10]
-        return name + " " + surname
+
+        full_name = (name + " " if name != "." else "") + surname
+        return full_name
     
     def post_edit(self):
         self.user = self.current_frm.user
