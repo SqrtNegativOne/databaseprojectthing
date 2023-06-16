@@ -19,7 +19,7 @@ def signup(name, subject, password) -> teacher:
             except EOFError:
                 break
     
-    _id = int(user.id[2:]) if user else 1
+    _id = int(user.id[2:]) + 1 if user else 1
 
     emp_num  = "T" + subject.upper()[0] + str(_id).rjust(4, "0")
     password = sha256(password.encode("UTF-8")).hexdigest()
