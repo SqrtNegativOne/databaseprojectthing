@@ -56,8 +56,9 @@ def signin(admno, password):
 def register(name, password, subjectlist):
     global studentList, user
     fetchDatabase()
+    admn_no = "ST" + str(int(studentList[-1][2][2:]) + 1).rjust(4, "0") if studentList else "ST0001"
     with open(FILE_PATH, 'a', newline='') as databasething:
-        user = [name, sha256(password.encode('utf-8')).hexdigest(), "ST" + str(len(studentList)+1).rjust(4, "0"), subjectlist]
+        user = [name, sha256(password.encode('utf-8')).hexdigest(), admn_no, subjectlist]
         csv.writer(databasething).writerow(user)
         return user
 
@@ -114,4 +115,5 @@ def deleteAccount(user):
     for randomUserN in range(len(studentList)):
         if user[2] == studentList[randomUserN][2]:
             studentList.remove(user)
+            break
     rewriteDatabase()
