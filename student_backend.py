@@ -1,4 +1,3 @@
-from copy import deepcopy
 from os import remove, rename
 from hashlib import sha256
 import csv
